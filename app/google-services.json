@@ -1,0 +1,286 @@
+{
+  "project_info": {
+    "project_number": "255419191791",
+    "project_id": "movieapp-cdb85",
+    "storage_bucket": "movieapp-cdb85.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:b8f289677e6e5b4f52a61a",
+        "android_client_info": {
+          "package_name": "com.example.movieapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:f1d29d22db3c6dc152a61a",
+        "android_client_info": {
+          "package_name": "com.shubham.hard75"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-8b7dlr1pr34hb5khp56a99u4u0lu242b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shubham.hard75",
+            "certificate_hash": "5b1d11a1d766195604a0a8455e0ae1e148710914"
+          }
+        },
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:5a8c58be9d6e85d152a61a",
+        "android_client_info": {
+          "package_name": "com.shubham.hard75kmm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-3rhsc3va77mk71ueqmvdo85kf18p2p20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shubham.hard75kmm",
+            "certificate_hash": "5b1d11a1d766195604a0a8455e0ae1e148710914"
+          }
+        },
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:e40982137a3c3e5952a61a",
+        "android_client_info": {
+          "package_name": "com.shubham.live_notification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-v08182u3rn7guor9tvohfpmd4a0jp629.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shubham.live_notification",
+            "certificate_hash": "7b144811b69f37558a2efab67e0b55ff2c55a0f1"
+          }
+        },
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:fcda1b18ae63769652a61a",
+        "android_client_info": {
+          "package_name": "com.shubham.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:a516c43b64bd112a52a61a",
+        "android_client_info": {
+          "package_name": "com.shubham.sample.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255419191791:android:4894c8aa008cc9e452a61a",
+        "android_client_info": {
+          "package_name": "com.shubham.verifiedcredential"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFzv2qq7r_au2fy1ixMO7QjlqIiIRS3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255419191791-jidi67i4icsd26p8mm1qobdn5sf3krv1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255419191791-1n1aoi459i4jd42c67vp6cppluqtfs41.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shubham.hard75kmm"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

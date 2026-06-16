@@ -1,0 +1,11 @@
+.git
+.gradle
+.idea
+app/build
+build
+backend/node_modules
+backend/.env
+backend/.env.*
+!backend/.env.example
+!backend/.env.railway.example
+*.log

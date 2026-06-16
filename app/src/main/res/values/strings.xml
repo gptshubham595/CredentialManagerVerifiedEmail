@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">VerifiedCredential</string>
+    <string name="asset_statements" translatable="false">[{
+        \"relation\": [\"delegate_permission/common.get_login_creds\"],
+        \"target\": {
+            \"namespace\": \"web\",
+            \"site\": \"https://movieapp-cdb85.web.app\"
+        }
+    }]</string>
+</resources>

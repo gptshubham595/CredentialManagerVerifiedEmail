@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.shubham.verifiedcredential",
+      "sha256_cert_fingerprints": [
+        "4A:0B:ED:E2:AD:EC:D7:D6:0C:7D:58:3F:F5:0B:1C:B0:2F:07:F7:E6:9D:33:DC:A8:0C:8E:45:0C:BA:E8:D1:9B"
+      ]
+    }
+  }
+]
