@@ -45,6 +45,20 @@ export function assertRuntimeConfig() {
   if (!config.databaseUrl) {
     throw new Error('DATABASE_URL is required');
   }
+  if (
+    config.firebase.projectId &&
+    (
+      !config.firebase.clientEmail ||
+      !config.firebase.privateKey ||
+      config.firebase.clientEmail.includes('xxxxx') ||
+      config.firebase.privateKey.includes('PASTE_SERVICE_ACCOUNT_PRIVATE_KEY_HERE') ||
+      config.firebase.privateKey.includes('...')
+    )
+  ) {
+    throw new Error(
+      'Firebase Admin credentials are placeholders. Set FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY from a Firebase service account JSON.'
+    );
+  }
   if (!config.jwtSecret || config.jwtSecret === 'dev-only-change-me') {
     console.warn('JWT_SECRET is using a development fallback. Set a strong secret before deploy.');
   }

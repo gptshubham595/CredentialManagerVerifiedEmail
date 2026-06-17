@@ -643,7 +643,7 @@ class AuthViewModel : ViewModel() {
         } catch (exception: CreateCredentialException) {
             _state.update {
                 it.copy(
-                    error = exception.message ?: "Passkey creation was not completed.",
+                    error = credentialErrorMessage("Credential creation failed", exception),
                     isLoading = false
                 )
             }
@@ -651,7 +651,7 @@ class AuthViewModel : ViewModel() {
         } catch (exception: GetCredentialException) {
             _state.update {
                 it.copy(
-                    error = exception.message ?: "No verified email credential was returned.",
+                    error = credentialErrorMessage("Credential request failed", exception),
                     isLoading = false
                 )
             }
@@ -666,6 +666,19 @@ class AuthViewModel : ViewModel() {
             return
         }
         _state.update { it.copy(isLoading = false) }
+    }
+
+    private fun credentialErrorMessage(
+        prefix: String,
+        exception: Exception
+    ): String {
+        val type = exception::class.simpleName ?: "CredentialException"
+        val message = exception.message ?: exception.localizedMessage
+        return if (message.isNullOrBlank()) {
+            "$prefix: $type"
+        } else {
+            "$prefix: $type: $message"
+        }
     }
 
     private suspend fun getGoogleIdCredential(
@@ -906,8 +919,12 @@ class AuthViewModel : ViewModel() {
         challenge: String
     ): String {
         val userId = user.uid.toByteArray(Charsets.UTF_8).base64Url()
-        val email = jsonEscape(user.email.orEmpty())
-        val displayName = jsonEscape(user.displayName?.ifBlank { user.email }.orEmpty())
+        val userName = jsonEscape(user.email?.takeIf { it.isNotBlank() } ?: user.uid)
+        val displayName = jsonEscape(
+            user.displayName?.takeIf { it.isNotBlank() }
+                ?: user.email?.takeIf { it.isNotBlank() }
+                ?: user.uid
+        )
 
         return """
             {
@@ -918,7 +935,7 @@ class AuthViewModel : ViewModel() {
               },
               "user": {
                 "id": "$userId",
-                "name": "$email",
+                "name": "$userName",
                 "displayName": "$displayName"
               },
               "pubKeyCredParams": [
@@ -1722,7 +1739,7 @@ private fun BiometricSection(
                 )
             }
             Text(
-                text = "This uses a Keystore-backed strong-biometric key. New or removed biometrics invalidate the key, and a successful unlock expires after two minutes.",
+                text = "This prefers a Keystore-backed strong-biometric key. If no strong biometric is enrolled, it falls back to device screen lock; successful unlock expires after two minutes.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1763,13 +1780,19 @@ private fun launchBiometricAuthentication(
     activity: FragmentActivity,
     onResult: (Boolean, String) -> Unit
 ) {
-    val authenticators = BIOMETRIC_STRONG
     val biometricManager = BiometricManager.from(activity)
+    val strongAvailability = biometricManager.canAuthenticate(BIOMETRIC_STRONG)
+    val useStrongBiometric = strongAvailability == BiometricManager.BIOMETRIC_SUCCESS
+    val authenticators = if (useStrongBiometric) {
+        BIOMETRIC_STRONG
+    } else {
+        BIOMETRIC_STRONG or DEVICE_CREDENTIAL
+    }
 
     when (val availability = biometricManager.canAuthenticate(authenticators)) {
         BiometricManager.BIOMETRIC_SUCCESS -> Unit
         BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-            onResult(false, "This device does not have biometric hardware.")
+            onResult(false, "This device does not have biometric hardware or a screen lock.")
             return
         }
         BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
@@ -1777,7 +1800,7 @@ private fun launchBiometricAuthentication(
             return
         }
         BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-            onResult(false, "No strong biometric is enrolled.")
+            onResult(false, "No strong biometric or device screen lock is enrolled.")
             return
         }
         BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> {
@@ -1798,21 +1821,25 @@ private fun launchBiometricAuthentication(
         }
     }
 
-    val cipher = try {
-        createBiometricCipher()
-    } catch (exception: KeyPermanentlyInvalidatedException) {
-        resetBiometricKey()
-        onResult(
-            false,
-            "Biometric enrollment changed. The old key was invalidated; authenticate again to trust the new biometric set."
-        )
-        return
-    } catch (exception: Exception) {
-        onResult(
-            false,
-            exception.localizedMessage ?: "Could not prepare biometric key."
-        )
-        return
+    val cipher = if (useStrongBiometric) {
+        try {
+            createBiometricCipher()
+        } catch (exception: KeyPermanentlyInvalidatedException) {
+            resetBiometricKey()
+            onResult(
+                false,
+                "Biometric enrollment changed. The old key was invalidated; authenticate again to trust the new biometric set."
+            )
+            return
+        } catch (exception: Exception) {
+            onResult(
+                false,
+                exception.localizedMessage ?: "Could not prepare biometric key."
+            )
+            return
+        }
+    } else {
+        null
     }
 
     val executor = ContextCompat.getMainExecutor(activity)
@@ -1822,12 +1849,16 @@ private fun launchBiometricAuthentication(
         object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                val cryptoObject = result.cryptoObject
-                if (cryptoObject?.cipher == null) {
+                if (useStrongBiometric && result.cryptoObject?.cipher == null) {
                     onResult(false, "Biometric prompt returned without a valid crypto object.")
                     return
                 }
-                onResult(true, "Strong biometric accepted. Session expires in 120s.")
+                val status = if (useStrongBiometric) {
+                    "Strong biometric accepted. Session expires in 120s."
+                } else {
+                    "Device credential accepted. Session expires in 120s."
+                }
+                onResult(true, status)
             }
 
             override fun onAuthenticationError(
@@ -1845,14 +1876,22 @@ private fun launchBiometricAuthentication(
         }
     )
 
-    val promptInfo = BiometricPrompt.PromptInfo.Builder()
+    val promptInfoBuilder = BiometricPrompt.PromptInfo.Builder()
         .setTitle("Unlock Verified Credential")
-        .setSubtitle("Strong biometric required")
-        .setNegativeButtonText("Cancel")
+        .setSubtitle(if (useStrongBiometric) "Strong biometric required" else "Use device screen lock")
         .setAllowedAuthenticators(authenticators)
-        .build()
 
-    prompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
+    if (useStrongBiometric) {
+        promptInfoBuilder.setNegativeButtonText("Cancel")
+    }
+
+    val promptInfo = promptInfoBuilder.build()
+
+    if (cipher != null) {
+        prompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
+    } else {
+        prompt.authenticate(promptInfo)
+    }
 }
 
 private fun createBiometricCipher(): Cipher {
