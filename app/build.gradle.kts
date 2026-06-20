@@ -19,7 +19,7 @@ android {
         buildConfigField(
             "String",
             "BACKEND_BASE_URL",
-            "\"${providers.gradleProperty("BACKEND_BASE_URL").getOrElse("http://10.0.2.2:8080/")}\""
+            "\"${providers.gradleProperty("BACKEND_BASE_URL").getOrElse("https://54ac-171-76-80-37.ngrok-free.app/")}\""
         )
     }
 

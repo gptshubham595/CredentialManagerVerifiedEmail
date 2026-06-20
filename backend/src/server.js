@@ -33,7 +33,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/notifications', notificationsRouter);
 
 app.use((error, _req, res, _next) => {
-  const status = error.name === 'ZodError' ? 400 : 500;
+  const status = error.statusCode || (error.name === 'ZodError' ? 400 : 500);
   console.error('[api-error]', {
     status,
     name: error.name,
