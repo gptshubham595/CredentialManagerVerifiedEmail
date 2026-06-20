@@ -563,6 +563,42 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    @OptIn(ExperimentalDigitalCredentialApi::class)
+    fun requestSampleMdlCredential(activity: Activity) {
+        viewModelScope.launch {
+            runAuthAction {
+                val nonce = createNonce()
+                val request = GetCredentialRequest(
+                    listOf(
+                        GetDigitalCredentialOption(
+                            requestJson = sampleMdlRequestJson(nonce)
+                        )
+                    )
+                )
+
+                val response = CredentialManager
+                    .create(activity)
+                    .getCredential(activity, request)
+
+                val credential = response.credential
+                if (credential is DigitalCredential) {
+                    _state.update {
+                        it.copy(
+                            credentialNonce = nonce,
+                            credentialPreview = credential.credentialJson.take(1200),
+                            message = "CMWallet returned an mDL credential response.",
+                            error = null
+                        )
+                    }
+                } else {
+                    _state.update {
+                        it.copy(error = "Credential Manager returned ${credential::class.simpleName}, not a digital credential.")
+                    }
+                }
+            }
+        }
+    }
+
     fun createPasskey(activity: Activity) {
         val user = auth.currentUser
         if (user == null) {
@@ -987,6 +1023,7 @@ class AuthViewModel : ViewModel() {
                   "protocol": "openid4vp-v1-unsigned",
                   "data": {
                     "response_type": "vp_token",
+                    "response_mode": "dc_api",
                     "nonce": "$nonce",
                     "dcql_query": {
                       "credentials": [
@@ -995,12 +1032,75 @@ class AuthViewModel : ViewModel() {
                           "format": "dc+sd-jwt",
                           "meta": {
                             "vct_values": [
-                              "https://credentials.google.com/identity/email_address/v1"
+                              "UserInfoCredential"
                             ]
                           },
                           "claims": [
                             {
                               "path": ["email"]
+                            },
+                            {
+                              "path": ["name"]
+                            },
+                            {
+                              "path": ["given_name"]
+                            },
+                            {
+                              "path": ["family_name"]
+                            },
+                            {
+                              "path": ["picture"]
+                            },
+                            {
+                              "path": ["hd"]
+                            },
+                            {
+                              "path": ["email_verified"]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+        """.trimIndent()
+    }
+
+    private fun sampleMdlRequestJson(nonce: String): String {
+        return """
+            {
+              "requests": [
+                {
+                  "protocol": "openid4vp-v1-unsigned",
+                  "data": {
+                    "response_type": "vp_token",
+                    "response_mode": "dc_api",
+                    "nonce": "$nonce",
+                    "dcql_query": {
+                      "credentials": [
+                        {
+                          "id": "sample_mdl",
+                          "format": "mso_mdoc",
+                          "meta": {
+                            "doctype_value": "org.iso.18013.5.1.mDL"
+                          },
+                          "claims": [
+                            {
+                              "path": ["org.iso.18013.5.1", "family_name"]
+                            },
+                            {
+                              "path": ["org.iso.18013.5.1", "given_name"]
+                            },
+                            {
+                              "path": ["org.iso.18013.5.1", "birth_date"]
+                            },
+                            {
+                              "path": ["org.iso.18013.5.1", "portrait"]
+                            },
+                            {
+                              "path": ["org.iso.18013.5.1", "age_over_21"]
                             }
                           ]
                         }
@@ -1095,10 +1195,16 @@ private fun VerifiedCredentialApp(viewModel: AuthViewModel = viewModel()) {
 
                     CredentialManagerSection(
                         state = state,
-                        onRequestCredential = {
+                        onRequestVerifiedEmailCredential = {
                             val activity = it as? Activity
                             if (activity != null) {
                                 viewModel.requestVerifiedEmailCredential(activity)
+                            }
+                        },
+                        onRequestSampleMdlCredential = {
+                            val activity = it as? Activity
+                            if (activity != null) {
+                                viewModel.requestSampleMdlCredential(activity)
                             }
                         }
                     )
@@ -1567,7 +1673,8 @@ private fun ProfileRow(label: String, value: String) {
 @Composable
 private fun CredentialManagerSection(
     state: AuthUiState,
-    onRequestCredential: (Any) -> Unit
+    onRequestVerifiedEmailCredential: (Any) -> Unit,
+    onRequestSampleMdlCredential: (Any) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -1587,12 +1694,12 @@ private fun CredentialManagerSection(
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = "This requests a cryptographic email credential from Android. The app only previews the response; a backend must validate the SD-JWT before Firestore is updated.",
+                text = "Use verified email for Google UserInfoCredential, or CMWallet mDL to test the sample wallet you installed.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             OutlinedButton(
-                onClick = { onRequestCredential(context) },
+                onClick = { onRequestVerifiedEmailCredential(context) },
                 enabled = !state.isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -1603,6 +1710,19 @@ private fun CredentialManagerSection(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Request verified email")
+            }
+            OutlinedButton(
+                onClick = { onRequestSampleMdlCredential(context) },
+                enabled = !state.isLoading,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.VerifiedUser,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Request CMWallet mDL")
             }
 
             if (state.credentialPreview != null) {
